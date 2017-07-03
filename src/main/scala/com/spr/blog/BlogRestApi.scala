@@ -1,15 +1,38 @@
 package com.spr.blog
 
-import akka.actor.{ActorRef, ActorSystem}
+import java.util.UUID
+
 import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server._
-import akka.http.scaladsl.server.Directives._
-import akka.util.Timeout
+import akka.pattern.ask
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.Future
 
-trait BlogRestApi extends JsonSupport with BlogService {
-  def route: Route =
+/**
+  * Wrapper API around a [[BlogEntity]] actor. This pattern is similar in spirit to Akka Typed.
+  */
+trait BlogService extends AkkaConfiguration {
+
+  import BlogEntity._
+
+  private val blogEntity = actorRefFactory.actorOf(BlogEntity.props)
+
+  def getPost(id: UUID): Future[MaybePost[PostContent]] =
+    (blogEntity ? GetPost(id)).mapTo[MaybePost[PostContent]]
+
+  def addPost(content: PostContent): Future[PostAdded] =
+    (blogEntity ? AddPost(content)).mapTo[PostAdded]
+
+  def updatePost(id: UUID, content: PostContent): Future[MaybePost[PostUpdated]] =
+    (blogEntity ? UpdatePost(id, content)).mapTo[MaybePost[PostUpdated]]
+
+}
+
+/**
+  * HTTP routes for the BlogService API.
+  */
+trait BlogRestApi extends RestApi with BlogService {
+  override def route: Route =
     pathPrefix("api" / "blog") {
       (pathEndOrSingleSlash & post) {
         // POST /api/blog/
@@ -40,16 +63,4 @@ trait BlogRestApi extends JsonSupport with BlogService {
           }
         }
     }
-}
-
-object BlogRestApi {
-
-  def apply(timeout: Timeout)(implicit system: ActorSystem): BlogRestApi = new DefaultBlogRestApi(timeout)
-
-  private class DefaultBlogRestApi(override val requestTimeout: Timeout)(implicit system: ActorSystem) extends BlogRestApi {
-    override implicit val executionContext: ExecutionContext = system.dispatcher
-
-    override def create(): ActorRef = system.actorOf(BlogEntity.props)
-  }
-
 }
