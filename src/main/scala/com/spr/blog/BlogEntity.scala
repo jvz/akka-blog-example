@@ -18,7 +18,8 @@ class BlogEntity extends PersistentActor {
 
   private var state = BlogState()
 
-  // in a production scenario, we'd use something more sophisticated where multiple blogs may be hosted
+  // in order to really match the Lagom example properly, we'd create an actor for every blog post, though that
+  // sounds a bit overkill to me. then our persistenceId would be something like s"blog-$id".
   override def persistenceId: String = "blog"
 
   override def receiveCommand: Receive = {
