@@ -9,7 +9,7 @@ import akka.persistence.{PersistentActor, SnapshotOffer}
 import scala.concurrent.{Future, Promise}
 
 /**
-  *
+  * Aggregate root entity for holding the state of a blog.
   */
 class BlogEntity extends PersistentActor {
 
@@ -18,7 +18,7 @@ class BlogEntity extends PersistentActor {
 
   private var state = BlogState()
 
-  // for scalability purposes, we'd probably split a real blog into shards or similar
+  // in a production scenario, we'd use something more sophisticated where multiple blogs may be hosted
   override def persistenceId: String = "blog"
 
   override def receiveCommand: Receive = {
