@@ -11,9 +11,9 @@ import scala.concurrent.{Future, Promise}
 /**
   *
   */
-class Blog extends PersistentActor {
+class BlogEntity extends PersistentActor {
 
-  import Blog._
+  import BlogEntity._
   import context._
 
   private var state = BlogState()
@@ -56,8 +56,8 @@ class Blog extends PersistentActor {
 
 }
 
-object Blog {
-  def props = Props(new Blog)
+object BlogEntity {
+  def props = Props(new BlogEntity)
 
   sealed trait BlogCommand
 

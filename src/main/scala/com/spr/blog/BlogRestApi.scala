@@ -49,7 +49,7 @@ object BlogRestApi {
   private class DefaultBlogRestApi(override val requestTimeout: Timeout)(implicit system: ActorSystem) extends BlogRestApi {
     override implicit val executionContext: ExecutionContext = system.dispatcher
 
-    override def create(): ActorRef = system.actorOf(Blog.props)
+    override def create(): ActorRef = system.actorOf(BlogEntity.props)
   }
 
 }

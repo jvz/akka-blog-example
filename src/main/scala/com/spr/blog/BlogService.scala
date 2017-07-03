@@ -9,11 +9,11 @@ import akka.util.Timeout
 import scala.concurrent.{ExecutionContext, Future}
 
 /**
-  * Wrapper API around a [[Blog]] actor.
+  * Wrapper API around a [[BlogEntity]] actor.
   */
 trait BlogService {
 
-  import Blog._
+  import BlogEntity._
 
   def create(): ActorRef
 
