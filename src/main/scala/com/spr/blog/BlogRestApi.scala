@@ -1,7 +1,5 @@
 package com.spr.blog
 
-import java.util.UUID
-
 import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server._
 import akka.pattern.ask
@@ -18,13 +16,13 @@ trait BlogService extends AkkaConfiguration {
 
   private val blogEntity = actorRefFactory.actorOf(BlogEntity.props)
 
-  def getPost(id: UUID): Future[MaybePost[PostContent]] =
+  def getPost(id: PostId): Future[MaybePost[PostContent]] =
     (blogEntity ? GetPost(id)).mapTo[MaybePost[PostContent]]
 
   def addPost(content: PostContent): Future[PostAdded] =
     (blogEntity ? AddPost(content)).mapTo[PostAdded]
 
-  def updatePost(id: UUID, content: PostContent): Future[MaybePost[PostUpdated]] =
+  def updatePost(id: PostId, content: PostContent): Future[MaybePost[PostUpdated]] =
     (blogEntity ? UpdatePost(id, content)).mapTo[MaybePost[PostUpdated]]
 
 }
@@ -43,7 +41,7 @@ trait BlogRestApi extends RestApi with BlogService {
           }
         }
       } ~
-        pathPrefix(JavaUUID) { id =>
+        pathPrefix(JavaUUID.map(PostId(_))) { id =>
           pathEndOrSingleSlash {
             get {
               // GET /api/blog/:id

@@ -1,7 +1,5 @@
 package com.spr.blog
 
-import java.util.UUID
-
 import akka.actor.Props
 import akka.pattern.pipe
 import akka.persistence.{PersistentActor, SnapshotOffer}
@@ -26,7 +24,7 @@ class BlogEntity extends PersistentActor {
     case GetPost(id) =>
       sender() ! state(id)
     case AddPost(content) =>
-      handleEvent(PostAdded(UUID.randomUUID(), content)) pipeTo sender()
+      handleEvent(PostAdded(PostId(), content)) pipeTo sender()
       ()
     case UpdatePost(id, content) =>
       state(id) match {
@@ -62,27 +60,27 @@ object BlogEntity {
 
   sealed trait BlogCommand
 
-  final case class GetPost(id: UUID) extends BlogCommand
+  final case class GetPost(id: PostId) extends BlogCommand
 
   final case class AddPost(content: PostContent) extends BlogCommand
 
-  final case class UpdatePost(id: UUID, content: PostContent) extends BlogCommand
+  final case class UpdatePost(id: PostId, content: PostContent) extends BlogCommand
 
   sealed trait BlogEvent {
-    val id: UUID
+    val id: PostId
     val content: PostContent
   }
 
-  final case class PostAdded(id: UUID, content: PostContent) extends BlogEvent
+  final case class PostAdded(id: PostId, content: PostContent) extends BlogEvent
 
-  final case class PostUpdated(id: UUID, content: PostContent) extends BlogEvent
+  final case class PostUpdated(id: PostId, content: PostContent) extends BlogEvent
 
-  final case class PostNotFound(id: UUID) extends RuntimeException(s"Blog post not found with id $id")
+  final case class PostNotFound(id: PostId) extends RuntimeException(s"Blog post not found with id $id")
 
   type MaybePost[+A] = Either[PostNotFound, A]
 
-  final case class BlogState(posts: Map[UUID, PostContent]) {
-    def apply(id: UUID): MaybePost[PostContent] = posts.get(id).toRight(PostNotFound(id))
+  final case class BlogState(posts: Map[PostId, PostContent]) {
+    def apply(id: PostId): MaybePost[PostContent] = posts.get(id).toRight(PostNotFound(id))
 
     def +(event: BlogEvent): BlogState = BlogState(posts.updated(event.id, event.content))
   }
