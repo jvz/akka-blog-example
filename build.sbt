@@ -4,6 +4,8 @@ name := "akka-blog-microservice"
 organization := "com.spr"
 version := "1.0"
 
+mainClass := Some("com.spr.blog.Main")
+
 scalaVersion := "2.12.2"
 
 scalacOptions ++= compilerFlags
