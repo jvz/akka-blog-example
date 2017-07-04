@@ -1,4 +1,4 @@
-package com.spr.blog
+package com.spr.akka
 
 import de.heikoseeberger.akkahttpcirce.FailFastCirceSupport
 import io.circe.generic.AutoDerivation

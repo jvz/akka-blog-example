@@ -1,4 +1,4 @@
-package com.spr.blog
+package com.spr.akka
 
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http

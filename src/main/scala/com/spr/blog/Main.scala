@@ -3,6 +3,7 @@ package com.spr.blog
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
 import akka.util.Timeout
+import com.spr.akka.{ImplicitAkkaConfiguration, RestApiServer}
 
 import scala.concurrent.Await
 import scala.concurrent.duration._

@@ -1,4 +1,4 @@
-package com.spr.blog
+package com.spr.akka
 
 import akka.actor.ActorRefFactory
 import akka.stream.Materializer

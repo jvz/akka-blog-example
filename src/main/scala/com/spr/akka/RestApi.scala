@@ -1,4 +1,4 @@
-package com.spr.blog
+package com.spr.akka
 
 import akka.http.scaladsl.server.{Directives, Route}
 

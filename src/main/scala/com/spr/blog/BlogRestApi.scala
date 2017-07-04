@@ -5,6 +5,7 @@ import java.util.UUID
 import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server._
 import akka.pattern.ask
+import com.spr.akka.{AkkaConfiguration, RestApi}
 
 import scala.concurrent.Future
 
